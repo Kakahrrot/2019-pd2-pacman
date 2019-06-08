@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>picture/log1.png</file>
+        <file>picture/log2.png</file>
+        <file>picture/pacman.png</file>
+        <file>picture/stone.png</file>
+        <file>picture/yellow-dot.png</file>
+        <file>picture/armed-pacman.png</file>
+        <file>picture/blue-ghost.png</file>
+        <file>picture/knight.png</file>
+        <file>picture/mouse-ghost.png</file>
+        <file>picture/red-dot.png</file>
+        <file>picture/red-ghost.png</file>
+        <file>picture/white-ghost.png</file>
+    </qresource>
+</RCC>
