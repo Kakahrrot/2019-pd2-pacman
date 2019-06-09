@@ -33,12 +33,13 @@ public:
 public slots:
     void moveghost();
     void movepacman();
+    void startgame();
+    void Pause_Resume_game();
 private:
     void gameover();
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
     QGraphicsView *view;
-    QVector<block*> map;
     void setmap();
     void setitem();
     void setnode();
@@ -47,6 +48,8 @@ private:
     QTimer *timerghost;
     QTimer *timerpacman;
     QLabel *mylabel;
+    QPushButton *start;
+    QPushButton *pause_resume;
 };
 
 #endif // MAINWINDOW_H

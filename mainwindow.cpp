@@ -11,15 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     view = new QGraphicsView(this);
     view->setScene(scene);
     view->setGeometry(0,0,1850,900);
-    setmap();
-    setitem();
-    setnode();
-    timerghost = new QTimer(this);
-    timerpacman = new QTimer(this);
-    connect(timerghost,SIGNAL(timeout()), this, SLOT(moveghost()));
-    connect(timerpacman,SIGNAL(timeout()), this, SLOT(movepacman()));
-    timerghost->start(500);
-    timerpacman->start(250);
+    start = new QPushButton(this);
+    start->setText("Start");
+    start->setGeometry(100,100,100,100);
+    connect(start,SIGNAL(clicked()), this, SLOT(startgame()));
+   // startgame();
     QFont f( "Arial", 50, QFont::Bold);
     pac::score = new QLabel(this);
     pac::score->setFont(f);
@@ -40,6 +36,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
 void MainWindow::setmap()
 {
+    QVector<block*> map;
     block *b;
     for(int i = 1; i < 16; i++)
     {
@@ -175,8 +172,8 @@ void MainWindow::setmap()
     pac::map_info[14][15] = 2;
 
     //yellow dots
-    //for(int i = 2; i < 15; i++)
-    for(int i = 2; i < 3; i++)
+    for(int i = 2; i < 15; i++)
+    //for(int i = 2; i < 3; i++)
     {
         for(int j = 2; j < 16; j++)
         {
@@ -233,6 +230,7 @@ void MainWindow::setnode()
 
 void MainWindow::moveghost()
 {
+    timerghost->start(pac::ghostspeed);
     for(int i = 1; i < pac::item.size(); i++)
         pac::item.at(i)->move();
 }
@@ -277,6 +275,51 @@ void MainWindow::movepacman()
         */
 }
 
+void MainWindow::startgame()
+{
+    qDebug() << "test1";
+    setmap();
+    qDebug() << "test2";
+    setitem();
+    qDebug() << "test3";
+    setnode();
+    qDebug() << "test4";
+    timerghost = new QTimer(this);
+    timerpacman = new QTimer(this);
+    connect(timerghost,SIGNAL(timeout()), this, SLOT(moveghost()));
+    connect(timerpacman,SIGNAL(timeout()), this, SLOT(movepacman()));
+    pac::ghostspeed = 500;
+    pac::s = 0;
+    timerghost->start(pac::ghostspeed);
+    timerpacman->start(250);
+    delete start;
+    pause_resume = new QPushButton(this);
+    start->setText("Pause");
+    start->setGeometry(100,100,100,100);
+    pause_resume->show();
+    connect(pause_resume,SIGNAL(clicked()), this, SLOT(Pause_Resume_game()));
+}
+
+void MainWindow::Pause_Resume_game()
+{
+    static int mode = 1;
+    if(mode % 2)
+    {
+        timerghost->stop();
+        timerpacman->stop();
+        pause_resume->setText("Resume");
+    }
+    else
+    {
+        timerghost->start(pac::ghostspeed);
+        timerpacman->start(250);
+        pause_resume->setText("Pause");
+        pac::item.at(0)->setFlag(QGraphicsItem::ItemIsFocusable);
+        pac::item.at(0)->setFocus();
+    }
+    mode++;
+}
+
 void MainWindow::gameover()
 {
    qDebug() << "gameover";
@@ -284,8 +327,22 @@ void MainWindow::gameover()
    timerpacman->stop();
    delete timerghost;
    delete timerpacman;
-   for(int i = 0; i < pac::item.size();i++)
-       delete pac::item.at(i);
+   delete pause_resume;
+   while(!pac::item.isEmpty())
+   {
+       delete pac::item.at(0);
+       pac::item.removeFirst();
+   }
+   while(!pac::map.isEmpty())
+   {
+       delete pac::map.at(0);
+       pac::map.removeFirst();
+   }
+   while(!node::vertex.isEmpty())
+   {
+       delete node::vertex.at(0);
+       node::vertex.removeFirst();
+   }
    mylabel = new QLabel();
    mylabel->setGeometry(100,100,170,100);
    QFont f( "Arial", 50, QFont::Bold);
@@ -295,5 +352,11 @@ void MainWindow::gameover()
    else
        mylabel->setText("Win");
    mylabel->show();
-
+   start = new QPushButton(this);
+   start->setText("Start");
+   start->setGeometry(100,100,100,100);
+   connect(start,SIGNAL(clicked()), this, SLOT(startgame()));
+   start->show();
+   pac::life = 5;
+   pac::end = false;
 }

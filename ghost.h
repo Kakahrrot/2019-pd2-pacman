@@ -19,7 +19,7 @@ private:
     QVector<block*> path;
     static int dx[5];
     static int dy[5];
-    bool newtarget;
+    static bool newtarget;
 };
 
 #endif // GHOST_H

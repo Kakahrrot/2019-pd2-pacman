@@ -29,6 +29,7 @@ public:
     static bool attack;
     static int life;
     static bool end;
+    static int ghostspeed;
 public slots:
     virtual void changepix();
     void reset_eaten();

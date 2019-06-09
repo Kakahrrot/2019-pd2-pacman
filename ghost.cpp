@@ -2,6 +2,7 @@
 QGraphicsScene* ghost::scene = nullptr;
 int ghost::dx[5] = {0,0,-2,2,0};
 int ghost::dy[5] = {-2,2,0,0,0};
+bool ghost::newtarget = true;
 ghost::ghost(int x, int y, int id):pac(x,y,id),targetx(0),targety(0)
 {
     switch(id)
@@ -22,7 +23,6 @@ ghost::ghost(int x, int y, int id):pac(x,y,id),targetx(0),targety(0)
     pic = pic.scaled(size,size);
     setPixmap(pic);
     setPos(x*size, y*size);
-    newtarget = true;
 }
 
 ghost::~ghost()
@@ -43,9 +43,9 @@ void ghost::move()
         delete path.at(0);
         path.removeFirst();
     }
-    if(newtarget)
+    if(id ==1 || id == 2 || id == 3 || (id == 4 && newtarget))
     {
-        qDebug() << "trarget got" << id;
+        qDebug() << "target got" << id;
         switch(id)
         {
         case 1:
@@ -82,10 +82,11 @@ void ghost::move()
             a = rand()%15; b = rand()%16;
         }
         t->start(d);
-        newtarget = true;
+        if(id == 4)
+            newtarget = true;
     }
     this->changePos(t->next->getX(),t->next->getY());
-    if(x == targetx && y == targety)
+    if(id == 4 && x == targetx && y == targety)
         newtarget = true;
     if(id == 1)
     {
@@ -104,27 +105,40 @@ void ghost::move()
 
 void ghost::settarget1()
 {
-    newtarget = false;
-    targetx = 2;
-    targety = 2;
+    //newtarget = false;
     targetx = item.at(0)->getX();
     targety = item.at(0)->getY();
+    if(attack)
+    {
+        targetx = 2*(item.at(1)->getX()) - item.at(0)->getX();
+        targety = 2*(item.at(1)->getY()) - item.at(0)->getY();
+    }
 }
 
 void ghost::settarget2()
 {
-    newtarget = false;
+    //newtarget = false;
     //targetx = item.at(0)->getX();
     //targety = item.at(0)->getY();
     targetx = (item.at(0)->getX() + dx[direction]);
     targety = (item.at(0)->getY() + dy[direction]);
+    if(attack)
+    {
+        targetx = 2*(item.at(2)->getX()) - item.at(0)->getX();
+        targety = 2*(item.at(2)->getY()) - item.at(0)->getY();
+    }
 }
 
 void ghost::settarget3()
 {
-    newtarget = false;
+    //newtarget = false;
     targetx = 2*(item.at(0)->getX()+ dx[direction]) - item.at(1)->getX();
     targety = 2*(item.at(0)->getY()+ dy[direction]) - item.at(1)->getY();
+    if(attack)
+    {
+        targetx = 2*(item.at(3)->getX()) - item.at(0)->getX();
+        targety = 2*(item.at(4)->getY()) - item.at(0)->getY();
+    }
 }
 
 void ghost::settarget4()
@@ -141,5 +155,10 @@ void ghost::settarget4()
     {
         targetx = item.at(0)->getX();
         targety = item.at(0)->getY();
+    }
+    if(attack)
+    {
+        targetx = 2*(item.at(4)->getX()) - item.at(0)->getX();
+        targety = 2*(item.at(4)->getY()) - item.at(0)->getY();
     }
 }

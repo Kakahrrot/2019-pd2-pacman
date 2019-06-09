@@ -44,6 +44,7 @@ void pacman::move()
 
 void pacman::keyPressEvent(QKeyEvent *event)
 {
+    qDebug() << "key pressed!!!!!!";
     switch(event->key())
     {
     case Qt::Key_Up:

@@ -9,6 +9,7 @@ int pac::direction = 4;
 bool pac::attack = false;
 int pac::life = 5;
 bool pac::end = false;
+int pac::ghostspeed = 500;
 
 pac::pac(int x, int y, int id): eaten(false), x(x), y(y),id(id)
 {
@@ -52,6 +53,7 @@ bool pac::check(int tx, int ty)
         if(id == 0 && map.at(i)->getID() == 1 && map.at(i)->getX() == tx && map.at(i)->getY() == ty)
         {
             //yellow dot
+            ghostspeed--;
             delete map.at(i);
             map.remove(i);
             s += 100;
@@ -63,6 +65,7 @@ bool pac::check(int tx, int ty)
         else if(id == 0 && map.at(i)->getID() == 2 && map.at(i)->getX() == tx && map.at(i)->getY() == ty)
         {
             //red dot
+            ghostspeed -= 25;
             delete map.at(i);
             map.remove(i);
             s += 1000;
